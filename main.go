@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -52,7 +51,7 @@ func main() {
 				d.Rollback()
 			case "#":
 			default:
-				fmt.Println(errors.New(fmt.Sprintf("unknown instruction `%s` found", command[0])))
+				fmt.Println(fmt.Errorf("unknown instruction `%s` found", command[0]))
 				return
 			}
 		}
