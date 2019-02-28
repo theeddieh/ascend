@@ -7,16 +7,6 @@ import (
 	"strings"
 )
 
-// Command is a single database command
-type Command []string
-
-// Database is an in-memory KV store.
-// It tracks the current state and the transaction history.
-type Database struct {
-	state   map[string]string
-	history []Command
-}
-
 func main() {
 	// this should accept a single argument on the command line
 	// pointing to the path of the input file
@@ -57,26 +47,4 @@ func main() {
 		}
 	}
 	return
-}
-
-// Write the value `v` to the database under key `k`.
-func (d Database) Write(k, v string) {
-	d.state[k] = v
-}
-
-// Delete the key `k` from the database.
-func (d Database) Delete(k string) {
-	delete(d.state, k)
-}
-
-// Print the current state of the database.
-func (d Database) Print() {
-	for k, v := range d.state {
-		fmt.Println(k, v)
-	}
-}
-
-// Rollback the database back to its state prior to the most recent command.
-func (d Database) Rollback() {
-
 }
