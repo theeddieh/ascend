@@ -59,3 +59,29 @@ func TestDelete(t *testing.T) {
 		}
 	}
 }
+
+func TestRollback(t *testing.T) {
+	tests := []struct {
+		key, val string
+		expected error
+	}{
+		{"key-0", "value-0", ErrMissingKey},
+	}
+
+	d := New()
+	for _, tt := range tests {
+
+		d.Write(tt.key, tt.val)
+		_, err := d.Read(tt.key)
+		if err != nil {
+			t.Errorf("read error '%v'", err)
+			continue
+		}
+
+		d.Rollback()
+		_, err = d.Read(tt.key)
+		if err != tt.expected {
+			t.Errorf("read error '%v', expected '%v'", err, tt.expected)
+		}
+	}
+}
