@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/theeddieh/ascend/db"
 )
 
 func main() {
@@ -22,9 +24,7 @@ func main() {
 	defer infile.Close()
 	fileScanner := bufio.NewScanner(infile)
 
-	d := &Database{
-		state: make(map[string]string),
-	}
+	d := db.New()
 
 	for fileScanner.Scan() {
 		if err != nil {
