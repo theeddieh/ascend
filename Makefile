@@ -17,12 +17,11 @@ BINARY_NAME = memdb
 INPUT_FILE  = input-1.log
 
 # Targets
+run:
+	${GO_RUN} ${REPO_PATH} ${INPUT_FILE}
 
 build:
 	${GO_BUILD} -o ${BINARY_NAME}
-
-run: 
-	${GO_RUN} ${REPO_PATH} ${INPUT_FILE}
 
 test:
 	${GO_TEST} ./... -v
