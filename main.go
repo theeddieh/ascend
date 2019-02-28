@@ -36,6 +36,9 @@ func main() {
 				for key, value := range myDb {
 					fmt.Println(key, value)
 				}
+			case "ROLLBACK":
+				fmt.Println("unimplemented instruction", command[0])
+			case "#":
 			default:
 				fmt.Println(errors.New(fmt.Sprintf("unknown instruction `%s` found", command[0])))
 				return
