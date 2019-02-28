@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/theeddieh/ascend/db"
 )
 
 func main() {
@@ -22,22 +23,25 @@ func main() {
 	}
 	defer infile.Close()
 	fileScanner := bufio.NewScanner(infile)
-	myDb := make(map[string]string)
+
+	d := db.New()
+
 	for fileScanner.Scan() {
 		if err != nil {
 			break
 		} else {
 			switch command := strings.Fields(fileScanner.Text()); command[0] {
 			case "WRITE":
-				myDb[command[1]] = command[2]
+				d.Write(command[1], command[2])
 			case "DELETE":
-				delete(myDb, command[1])
+				d.Delete(command[1])
 			case "PRINT":
-				for key, value := range myDb {
-					fmt.Println(key, value)
-				}
+				d.Print()
+			case "ROLLBACK":
+				d.Rollback()
+			case "#":
 			default:
-				fmt.Println(errors.New(fmt.Sprintf("unknown instruction `%s` found", command[0])))
+				fmt.Println(fmt.Errorf("unknown instruction `%s` found", command[0]))
 				return
 			}
 		}
