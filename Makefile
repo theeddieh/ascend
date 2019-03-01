@@ -12,21 +12,31 @@ GO_BUILD   = ${GO_TOOL} build
 GO_RUN     = ${GO_TOOL} run
 GO_INSTALL = ${GO_TOOL} install
 
-# Project-specific variables
-BINARY_NAME  = ascendb
-INPUT_FILE   = input-1.log
-SANITY_FILE  = sanity.log
+# Target platforms
+TARGET_MAC = GOOS=darwin  GOARCH=amd64
+TARGET_NIX = GOOS=linux   GOARCH=amd64
+TARGET_WIN = GOOS=windows GOARCH=amd64
 
+# Project-specific variables
+BINARY_NAME = ascendb
+INPUT_FILE  = input-1.log
+SANITY_FILE = sanity.log
+VERSION     = 0.0.1
 
 # Targets
-run:
-	${GO_RUN} ${REPO_PATH} ${INPUT_FILE}
-
 build:
 	${GO_BUILD} -o ${BINARY_NAME}
 
+all:
+	${TARGET_MAC} ${GO_BUILD} -o ${BINARY_NAME}_mac
+	${TARGET_NIX} ${GO_BUILD} -o ${BINARY_NAME}_nix
+	${TARGET_WIN} ${GO_BUILD} -o ${BINARY_NAME}_win
+
 test:
 	${GO_TEST} ./... -v
+
+run:
+	${GO_RUN} ${REPO_PATH} ${INPUT_FILE}
 
 check:
 	${GO_VERSION}
