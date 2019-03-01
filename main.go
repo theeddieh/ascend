@@ -9,15 +9,18 @@ import (
 	"github.com/theeddieh/ascend/db"
 )
 
+// accepts a single argument pointing to the path of the input file
+// reads file a line at a time
+// executes database commands as they are read
 func main() {
-	// this should accept a single argument on the command line
-	// pointing to the path of the input file
+
 	if len(os.Args) < 2 {
 		fmt.Printf("No filepath specified\n")
 		fmt.Printf("Usage:\n")
 		fmt.Printf("  ./memdb <path to input file>\n")
 		return
 	}
+
 	infile, err := os.Open(os.Args[1])
 	if err != nil {
 		fmt.Printf("Failed to open file: %s\n", os.Args[1])
