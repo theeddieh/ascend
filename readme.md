@@ -5,8 +5,8 @@
 We'd like to see how you would finish this coding exercise.
 The goal is to implement a basic in-memory nosql database.
 
-Each line of the input file contains an instruction followed by a set of whitespace delimited arguments.
-Your program should run the commands in the file line by line and print the final database state to standard out.
+Each line of the input file contains an instruction followed by a set of *whitespace delimited arguments*.
+Your program should run the commands in the file *line by line* and print the final database state to standard out.
 
 You can choose to finish the exercise in any language you prefer.
 We have started a portion of the script in golang, as this is the primary language you can expect to work on here at Ascend.
