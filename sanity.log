@@ -1,0 +1,38 @@
+# will rolling back an empty db pass?
+ROLLBACK
+# can we write?
+WRITE wrote this
+PRINT
+# can we overwrite?
+WRITE wrote this-again
+PRINT
+# can we delete?
+WRITE wrote keep-this
+WRITE delete this-next
+PRINT
+WRITE wrote kept-this
+WRITE delete rolled-back
+DELETE delete
+PRINT
+# can we delete...nothing?
+DELETE key-2
+PRINT
+# can we rollback?
+ROLLBACK
+WRITE rolled-back delete
+PRINT
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+ROLLBACK
+WRITE rolled-back everything-else
+PRINT

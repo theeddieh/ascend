@@ -13,8 +13,10 @@ GO_RUN     = ${GO_TOOL} run
 GO_INSTALL = ${GO_TOOL} install
 
 # Project-specific variables
-BINARY_NAME = memdb
-INPUT_FILE  = input-1.log
+BINARY_NAME  = memdb
+INPUT_FILE   = input-1.log
+SANITY_FILE  = sanity.log
+
 
 # Targets
 run:
@@ -29,6 +31,9 @@ test:
 check:
 	${GO_VERSION}
 	${GO_ENV}
+
+sanity: clean check build
+	./${BINARY_NAME} ${SANITY_FILE} -v
 
 clean:
 	rm -f ${BINARY_NAME}
