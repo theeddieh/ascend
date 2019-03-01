@@ -17,8 +17,14 @@ func (e DatabaseError) Error() string {
 	return string(e)
 }
 
-// ErrMissingKey is returned when a db read fails
-const ErrMissingKey = DatabaseError("key not present")
+// ErrKeyNonexistant is returned when trying to read a key that never existed
+const ErrKeyNonexistant = DatabaseError("key does not exist")
+
+// ErrKeyMissing is returned when a
+const ErrKeyMissing = DatabaseError("key not present")
+
+// ErrKeyDeleted is returned when trying to read a deleted key
+const ErrKeyDeleted = DatabaseError("key deleted")
 
 // New in-memory database.
 func New() (d *Database) {
@@ -39,20 +45,20 @@ func (d *Database) Read(k string) (v string, err error) {
 
 	vals, ok := d.state[k]
 	if !ok {
-		// key never existed
-		return "", ErrMissingKey
+		// key never written
+		return "", ErrKeyNonexistant
 	}
 
 	l := len(vals)
 	if l == 0 {
-
-		return "", ErrMissingKey
+		// key has been rolled back to before it was first written
+		return "", ErrKeyMissing
 	}
 
 	v = vals[len(vals)-1]
 	if v == "" {
 		// key has been deleted
-		err = ErrMissingKey
+		err = ErrKeyDeleted
 	}
 	return v, err
 }

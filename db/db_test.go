@@ -11,7 +11,7 @@ func TestReadAndWrite(t *testing.T) {
 		expected           error
 	}{
 		{"key-0", "value-0", "key-0", "value-0", nil},
-		{"key-0", "", "key-1", "", ErrMissingKey},
+		{"key-0", "", "key-1", "", ErrKeyNonexistant},
 		{"key-1", "value-1", "key-1", "value-1", nil},
 		{"key-2", "value-2", "key-2", "value-2", nil},
 	}
@@ -36,7 +36,7 @@ func TestDelete(t *testing.T) {
 		key, val string
 		expected error
 	}{
-		{"key-0", "value-0", ErrMissingKey},
+		{"key-0", "value-0", ErrKeyDeleted},
 	}
 
 	d := New()
@@ -62,7 +62,7 @@ func TestRollback(t *testing.T) {
 		key, val string
 		expected error
 	}{
-		{"key-0", "value-0", ErrMissingKey},
+		{"key-0", "value-0", ErrKeyMissing},
 	}
 
 	d := New()
