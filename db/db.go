@@ -4,8 +4,7 @@ import (
 	"fmt"
 )
 
-// Database is an in-memory KV store.
-// It tracks the current state and the transaction history.
+// Database is an in-memory KV store with rollback support.
 type Database struct {
 	state   map[string][]string
 	history []string
@@ -18,7 +17,7 @@ func (e DatabaseError) Error() string {
 	return string(e)
 }
 
-// ErrMissingKey is returned when
+// ErrMissingKey is returned when a db read fails
 const ErrMissingKey = DatabaseError("key not present")
 
 // New in-memory database.
@@ -35,20 +34,24 @@ func (d *Database) Write(k, v string) {
 	d.history = append(d.history, k)
 }
 
-// Read the value stored under key `k`. Returns an error message if the key is missing.
+// Read the value stored under key `k`. Returns `ErrMissingKey` if empty.
 func (d *Database) Read(k string) (v string, err error) {
+
 	vals, ok := d.state[k]
 	if !ok {
+		// key never existed
 		return "", ErrMissingKey
 	}
 
 	l := len(vals)
-	if l < 1 {
+	if l == 0 {
+
 		return "", ErrMissingKey
 	}
 
 	v = vals[len(vals)-1]
 	if v == "" {
+		// key has been deleted
 		err = ErrMissingKey
 	}
 	return v, err
@@ -69,8 +72,7 @@ func (d *Database) Print() {
 	}
 }
 
-// Rollback the database back to its state prior to the most recent command.
-// Pops most recently accessed key off of history stack, and then pops that latest value off of that key's stack.
+// Rollback the previous write/delete command.
 func (d *Database) Rollback() {
 	l := len(d.history) - 1
 	lastCommand := d.history[l]
