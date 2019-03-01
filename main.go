@@ -21,6 +21,11 @@ func main() {
 		return
 	}
 
+	var debug bool
+	if len(os.Args) > 2 && os.Args[2] == "-v" {
+		debug = true
+	}
+
 	infile, err := os.Open(os.Args[1])
 	if err != nil {
 		fmt.Printf("Failed to open file: %s\n", os.Args[1])
@@ -38,6 +43,9 @@ func main() {
 			d.Delete(command[1])
 		case "PRINT":
 			d.Print()
+			if debug {
+				fmt.Println("-----------")
+			}
 		case "ROLLBACK":
 			d.Rollback()
 		case "#":
