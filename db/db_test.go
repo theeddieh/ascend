@@ -11,11 +11,8 @@ func TestReadAndWrite(t *testing.T) {
 		expected           error
 	}{
 		{"key-0", "value-0", "key-0", "value-0", nil},
-		{"key-0", "", "key-0", "", nil},
 		{"key-0", "", "key-1", "", ErrMissingKey},
-		{"key-1", "", "key-1", "", nil},
 		{"key-1", "value-1", "key-1", "value-1", nil},
-		{"", "", "", "", nil},
 		{"key-2", "value-2", "key-2", "value-2", nil},
 	}
 
