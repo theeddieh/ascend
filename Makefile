@@ -13,7 +13,7 @@ GO_RUN     = ${GO_TOOL} run
 GO_INSTALL = ${GO_TOOL} install
 
 # Project-specific variables
-BINARY_NAME  = memdb
+BINARY_NAME  = ascendb
 INPUT_FILE   = input-1.log
 SANITY_FILE  = sanity.log
 
