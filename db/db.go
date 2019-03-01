@@ -30,7 +30,7 @@ const ErrKeyDeleted = DatabaseError("key deleted")
 func New() (d *Database) {
 	return &Database{
 		state:   make(map[string][]string),
-		history: make([]string, 1),
+		history: make([]string, 0),
 	}
 }
 
@@ -55,7 +55,7 @@ func (d *Database) Read(k string) (v string, err error) {
 		return "", ErrKeyMissing
 	}
 
-	v = vals[len(vals)-1]
+	v = vals[l-1]
 	if v == "" {
 		// key has been deleted
 		err = ErrKeyDeleted
@@ -63,15 +63,24 @@ func (d *Database) Read(k string) (v string, err error) {
 	return v, err
 }
 
-// Delete the key `k` from the database.
+// Delete the key `k` from the database, if present.
 func (d *Database) Delete(k string) {
-	d.Write(k, "")
+	// slightly hacky - only records a delete if the key already exists
+	_, ok := d.state[k]
+	if ok {
+		d.Write(k, "")
+	}
 }
 
 // Print the current state of the database.
 func (d *Database) Print() {
 	for k, v := range d.state {
-		latestValue := v[len(v)-1]
+		l := len(v)
+		if l == 0 {
+			continue
+		}
+
+		latestValue := v[l-1]
 		if latestValue != "" {
 			fmt.Println(k, latestValue)
 		}
@@ -80,10 +89,23 @@ func (d *Database) Print() {
 
 // Rollback the previous write/delete command.
 func (d *Database) Rollback() {
-	l := len(d.history) - 1
-	lastCommand := d.history[l]
-	d.history = d.history[:l]
+	lenHistory := len(d.history)
+	if lenHistory == 0 {
+		// nothing to rollback
+		return
+	}
 
-	l = len(d.state[lastCommand]) - 1
-	d.state[lastCommand] = d.state[lastCommand][:l]
+	// check most recent key change
+	latestKey := d.history[lenHistory-1]
+	lenValues := len(d.state[latestKey])
+	if lenValues == 0 {
+		// nothing to rollback
+		return
+	}
+
+	// roll back key's value to previous
+	d.state[latestKey] = d.state[latestKey][:lenValues-1]
+
+	// pop most recent key
+	d.history = d.history[:lenHistory-1]
 }
