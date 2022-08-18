@@ -109,3 +109,23 @@ func (d *Database) Rollback() {
 	// pop most recent key
 	d.history = d.history[:lenHistory-1]
 }
+
+func (d *Database) Truncate(n int) {
+	// iterate over state map
+	// cut off beginning of slice
+
+	for k, v := range d.state {
+		size := len(v) - 1
+		if size <= n {
+			continue
+		} else {
+			d.state[k] = v[size-n:]
+		}
+		fmt.Println(k, d.state[k])
+
+	}
+
+	// truncate history to n
+	historySize := len(d.history) - 1
+	d.history = d.history[historySize:]
+}

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -81,4 +82,43 @@ func TestRollback(t *testing.T) {
 			t.Errorf("read error '%v', expected '%v' for test case [%d] %v", err, tt.expected, i, tt)
 		}
 	}
+}
+
+func TestTruncate(t *testing.T) {
+	tt := []struct {
+		key, val string
+		//expected error
+	}{
+		{"key-0", "value-0"},
+		{"key-0", "value-1"},
+		{"key-0", "value-1"},
+	}
+
+	d := New()
+
+	d.Write(tt[0].key, tt[0].val)
+	_, err := d.Read(tt[0].key)
+	if err != nil {
+		t.Errorf("read error '%v'", err)
+	}
+
+	d.Write(tt[1].key, tt[1].val)
+	_, err = d.Read(tt[1].key)
+	if err != nil {
+		t.Errorf("read error '%v'", err)
+
+	}
+
+	fmt.Println(d)
+
+	d.Truncate(1)
+
+	fmt.Println(d)
+
+	d.Rollback()
+	val, err := d.Read(tt[2].key)
+	if val == tt[0].val || err != nil {
+		t.Errorf("read error '%v', expected '%v' %v", val, tt[2].val, d)
+	}
+
 }

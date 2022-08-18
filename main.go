@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"strconv"
 
 	"github.com/theeddieh/ascend/db"
 )
@@ -48,6 +49,13 @@ func main() {
 			}
 		case "ROLLBACK":
 			d.Rollback()
+		case "TRUNCATE":
+			n, err := strconv.Atoi(command[1])
+			if (err != nil) {
+				fmt.Printf("TRUNCATE requires an integer")
+			} else {
+				d.Truncate(n)
+			}
 		case "#":
 		default:
 			fmt.Printf("unknown instruction `%s` found\n", command[0])
